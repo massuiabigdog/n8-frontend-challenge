@@ -2,14 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getData } from '../services/api';
 import { Section, PropertyCard } from '../components/Molecules';
+import { Spinner } from '../components/Atoms';
+import { PropertyItem } from '../types';
 
 const Home = () => {
   const [properties, setProperties] = useState([]);
   const [filters, setFilters] = useState({} as any);
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    navigate('/detail');
+  const handleDetailView = async (property?: PropertyItem) => {
+    navigate('/detail', { state: { property } });
   }
 
   const getProperties = async () => {
@@ -30,14 +32,14 @@ const Home = () => {
     setFilters({ ...filters, [filter]: value });
   }
 
-interface Property {
-  Bedrooms: number;
-  Bathrooms: number;
-  Parking: number;
-  'Sale Price': number;
-}
+  interface Property {
+    Bedrooms: number;
+    Bathrooms: number;
+    Parking: number;
+    'Sale Price': number;
+  }
 
-const getAvailableOptions = (item: keyof Property) => Array.from(new Set(properties?.map((property) => property[item]))).sort((a, b) => a - b);
+  const getAvailableOptions = (item: keyof Property) => Array.from(new Set(properties?.map((property) => property[item]))).sort((a, b) => a - b);
   const availableOptions = {
     bedrooms: getAvailableOptions('Bedrooms'),
     bathrooms: getAvailableOptions('Bathrooms'),
@@ -51,7 +53,7 @@ const getAvailableOptions = (item: keyof Property) => Array.from(new Set(propert
     //   '$500,000+',
     // ],
     // TODO: Refactor the price range to be dynamic based on the data
-    
+
     price: getAvailableOptions('Sale Price'),
   };
 
@@ -59,10 +61,6 @@ const getAvailableOptions = (item: keyof Property) => Array.from(new Set(propert
     <>
       <nav>
         <p>Welcome Home</p>
-
-        <div>
-          <button onClick={() => handleLogout()}>Logout</button>
-        </div>
       </nav>
       <div className="px-5 py-4 bg-gray-100">
         <div className="container mx-auto flex justify-between mb-4">
@@ -129,11 +127,14 @@ const getAvailableOptions = (item: keyof Property) => Array.from(new Set(propert
       </div>
 
       <Section>
-        <div className="flex flex-wrap -m-4">
-          {properties.map((property: any) => (
-            <PropertyCard key={property.id} {...property} />
-          ))}
-        </div>
+        {
+          properties.length ? <div className="flex flex-wrap -m-4">
+            {properties?.map((property: any) => (
+              <PropertyCard key={property.id} handleDetailView={(e: PropertyItem) => handleDetailView(e)} property={{ ...property }} />
+            ))}
+          </div> : <Spinner />
+        }
+
       </Section>
     </>
   );
