@@ -4,6 +4,13 @@ import { getData } from '../services/api';
 import { Section, PropertyCard } from '../components/Molecules';
 import { Spinner } from '../components/Atoms';
 import { PropertyItem } from '../types';
+import { Header } from '../components/Organisms';
+
+interface Property {
+  Bedrooms: number;
+  Bathrooms: number;
+  Parking: number;
+}
 
 const Home = () => {
   const [properties, setProperties] = useState([] as PropertyItem[]);
@@ -38,8 +45,6 @@ const Home = () => {
   }, [])
 
   const getFilteredProperties = () => {
-
-
     const priceInFilter = priceFilter.min !== 0 || priceFilter.max !== 1000000;
     const getPriceFilteredProperties = () => {
       const filteredDataByPrice: PropertyItem[] = [];
@@ -84,12 +89,7 @@ const Home = () => {
     setFilters({ ...filters, [filter]: value });
   }
 
-  interface Property {
-    Bedrooms: number;
-    Bathrooms: number;
-    Parking: number;
-    'Sale Price': number;
-  }
+
 
   const getAvailableOptions = (item: keyof Property) => Array.from(new Set(properties?.map((property) => property[item]))).sort((a, b) => a - b);
   const availableOptions = {
@@ -107,36 +107,29 @@ const Home = () => {
 
   return (
     <>
-      <nav>
-        <p>Welcome Home</p>
-      </nav>
+      <Header navigate={navigate} />
       <div className="px-5 py-4 bg-gray-100">
-        <div className="container mx-auto md:flex justify-between mb-4">
-          {Object.keys(availableOptions).map((option) => {
-            console.log(option, 'option')
-            return (
-              <div key={option}>
-                <label htmlFor={option}>{option}:</label>
-                <select
-                  id={option}
-                  className="ml-2 p-2 border border-gray-300 rounded"
-                  onChange={(e) => handleFilterChange(option, parseInt(e.target.value))}
-                >
-                  <option value="">Any</option>
-                  {availableOptions[option as keyof typeof availableOptions].map((option: any) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            );
-          })}
-          <div>
+        <div className="container mx-auto md:flex justify-between  mb-2 mt-2">
+          {Object.keys(availableOptions).map((option) => <div className='flex md:block' key={option}>
+            <label htmlFor={option}>{option}:</label>
+            <select
+              id={option}
+              className="md:ml-2  p-2 border border-gray-300 rounded ml-auto mb-4 sm:ml-auto lg:mb-0"
+              onChange={(e) => handleFilterChange(option, parseInt(e.target.value))}
+            >
+              <option value="">Any</option>
+              {availableOptions[option as keyof typeof availableOptions].map((option: any) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>)}
+          <div className='flex md:block'>
             <label htmlFor="price">Price Range:</label>
             <select
               id="price"
-              className="ml-2 p-2 border border-gray-300 rounded"
+              className="md:ml-2 p-2 border border-gray-300 rounded ml-auto"
               onChange={(e) => handleFilterChange('price', e.target.value)}
             >
               <option value="">Any</option>

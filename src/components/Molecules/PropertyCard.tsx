@@ -10,7 +10,7 @@ interface PropertyCardProps {
 
 const PropertyCard: React.FC<PropertyCardProps> = ({ property, handleDetailView }) => {
   return (
-    <div className="p-4 md:w-1/4">
+    <div className="p-4 md:w-1/3 lg:w-1/4">
       <div className="h-full border-2 hover:shadow-xl  border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
         <div className="p-6">
           <img className="lg:h-[150px] m-auto w:auto mb-6 object-cover object-center" src={property?.ThumbnailURL} alt="blog" />
