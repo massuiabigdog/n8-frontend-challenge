@@ -21,8 +21,11 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, handleDetailView 
             <span className="text-gray-400 mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
               beds {property.Bedrooms}
             </span>
-            <span className="text-gray-400 inline-flex items-center leading-none text-sm">
+            <span className="text-gray-400 mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
               baths {property.Bathrooms}
+            </span>
+            <span className="text-gray-400 inline-flex items-center leading-none text-sm">
+              Park {property.Parking}
             </span>
           </div>
           <p className="leading-relaxed text-xs text-gray-500 mb-3">{property.Description.length > 200 ? property.Description.slice(0, 100) + '...' : property.Description}</p>

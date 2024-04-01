@@ -6,8 +6,16 @@ import { Spinner } from '../components/Atoms';
 import { PropertyItem } from '../types';
 
 const Home = () => {
-  const [properties, setProperties] = useState([]);
-  const [filters, setFilters] = useState({} as any);
+  const [properties, setProperties] = useState([] as PropertyItem[]);
+  const [filteredProperties, setFilteredProperties] = useState([] as any[] | null);
+  const [filters, setFilters] = useState({
+  } as any);
+  const [priceFilter, setPriceFilter] = useState(
+    {
+      min: 0,
+      max: 1000000
+    }
+  );
   const navigate = useNavigate();
 
   const handleDetailView = async (property?: PropertyItem) => {
@@ -18,6 +26,7 @@ const Home = () => {
     try {
       const data = await getData();
       setProperties(data);
+      setFilteredProperties(data);
 
     } catch (error) {
       console.log(error)
@@ -28,7 +37,50 @@ const Home = () => {
     getProperties()
   }, [])
 
-  const handleFilterChange = (filter: string, value: string) => {
+  const getFilteredProperties = () => {
+
+
+    const priceInFilter = priceFilter.min !== 0 || priceFilter.max !== 1000000;
+    const getPriceFilteredProperties = () => {
+      const filteredDataByPrice: PropertyItem[] = [];
+      for (let i = 0; i < properties.length; i++) {
+        if (properties[i]['Sale Price'] >= priceFilter.min && properties[i]['Sale Price'] <= priceFilter.max) {
+          filteredDataByPrice.push(properties[i]);
+        }
+      }
+      return filteredDataByPrice;
+    }
+    const itemsToFilter = priceInFilter ? getPriceFilteredProperties() : properties;
+    const filterKeys = Object.keys(filters).filter(key => filters[key]);
+    if (filterKeys.length === 0) {
+      setFilteredProperties(itemsToFilter);
+      return;
+    }
+
+    const filteredData: PropertyItem[] = [];
+    for (let i = 0; i < itemsToFilter.length; i++) {
+      if (filterKeys.every(key => itemsToFilter[i][key as keyof PropertyItem] === filters[key])) {
+        filteredData.push(itemsToFilter[i]);
+      }
+    }
+    setFilteredProperties(filteredData);
+  }
+
+  useEffect(() => {
+    getFilteredProperties()
+  }, [filters, priceFilter])
+
+  const handleFilterChange = (filter: string, value: any) => {
+    console.log(value, 'value')
+    if (filter === 'price') {
+      if (!value) {
+        setPriceFilter({ min: 0, max: 1000000 });
+        return;
+      }
+      const priceRange = value.split(' - ');
+      setPriceFilter({ min: parseInt(priceRange[0].replace('$', '').replace(',', '')), max: priceRange[1] === '$500,000+' ? 500000 : parseInt(priceRange[1].replace('$', '').replace(',', '')) });
+      return;
+    }
     setFilters({ ...filters, [filter]: value });
   }
 
@@ -41,21 +93,17 @@ const Home = () => {
 
   const getAvailableOptions = (item: keyof Property) => Array.from(new Set(properties?.map((property) => property[item]))).sort((a, b) => a - b);
   const availableOptions = {
-    bedrooms: getAvailableOptions('Bedrooms'),
-    bathrooms: getAvailableOptions('Bathrooms'),
-    parking: getAvailableOptions('Parking'),
-    // price: [
-    //   '$0 - $100,000',
-    //   '$100,000 - $200,000',
-    //   '$200,000 - $300,000',
-    //   '$300,000 - $400,000',
-    //   '$400,000 - $500,000',
-    //   '$500,000+',
-    // ],
-    // TODO: Refactor the price range to be dynamic based on the data
-
-    price: getAvailableOptions('Sale Price'),
+    Bedrooms: getAvailableOptions('Bedrooms'),
+    Bathrooms: getAvailableOptions('Bathrooms'),
+    Parking: getAvailableOptions('Parking'),
   };
+  const priceOptions = [
+    '$100,000 - $200,000',
+    '$200,000 - $300,000',
+    '$300,000 - $400,000',
+    '$400,000 - $500,000',
+    '$500,000 - $999,000',
+  ]
 
   return (
     <>
@@ -63,51 +111,27 @@ const Home = () => {
         <p>Welcome Home</p>
       </nav>
       <div className="px-5 py-4 bg-gray-100">
-        <div className="container mx-auto flex justify-between mb-4">
-          <div>
-            <label htmlFor="bedrooms">Bedrooms:</label>
-            <select
-              id="bedrooms"
-              className="ml-2 p-2 border border-gray-300 rounded"
-              onChange={(e) => handleFilterChange('bedrooms', e.target.value)}
-            >
-              <option value="">Any</option>
-              {availableOptions.bedrooms.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="bathrooms">Bathrooms:</label>
-            <select
-              id="bathrooms"
-              className="ml-2 p-2 border border-gray-300 rounded"
-              onChange={(e) => handleFilterChange('bathrooms', e.target.value)}
-            >
-              <option value="">Any</option>
-              {availableOptions.bathrooms.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="parking">Parking Spaces:</label>
-            <select
-              id="parking"
-              className="ml-2 p-2 border border-gray-300 rounded"
-              onChange={(e) => handleFilterChange('parking', e.target.value)}>
-              <option value="">Any</option>
-              {availableOptions.parking.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="container mx-auto md:flex justify-between mb-4">
+          {Object.keys(availableOptions).map((option) => {
+            console.log(option, 'option')
+            return (
+              <div key={option}>
+                <label htmlFor={option}>{option}:</label>
+                <select
+                  id={option}
+                  className="ml-2 p-2 border border-gray-300 rounded"
+                  onChange={(e) => handleFilterChange(option, parseInt(e.target.value))}
+                >
+                  <option value="">Any</option>
+                  {availableOptions[option as keyof typeof availableOptions].map((option: any) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            );
+          })}
           <div>
             <label htmlFor="price">Price Range:</label>
             <select
@@ -116,7 +140,7 @@ const Home = () => {
               onChange={(e) => handleFilterChange('price', e.target.value)}
             >
               <option value="">Any</option>
-              {availableOptions.price.map((option) => (
+              {priceOptions.map((option) => (
                 <option key={option} value={option}>
                   {option}
                 </option>
@@ -129,10 +153,13 @@ const Home = () => {
       <Section>
         {
           properties.length ? <div className="flex flex-wrap -m-4">
-            {properties?.map((property: any) => (
+            {filteredProperties?.map((property: any) => (
               <PropertyCard key={property.id} handleDetailView={(e: PropertyItem) => handleDetailView(e)} property={{ ...property }} />
             ))}
           </div> : <Spinner />
+        }
+        {
+          properties.length && !filteredProperties?.length && <div className="text-center">No properties found</div>
         }
 
       </Section>
