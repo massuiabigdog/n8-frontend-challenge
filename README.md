@@ -42,10 +42,18 @@ validation error when there is an empty field or a format error.
 - When clicking the button if all validations are ok it will display a green “Message sent
 successfully” message.
 
+#### Bonus 
+Add a “Save Property” button that will display a modal with all other saved properties.
+
 #### Demo video
 https://github.com/massuiabigdog/n8-frontend-challenge/assets/16282589/70062409-e9dc-4ee8-b694-1f4f45efa306
 
 #### Screens
+<p float="left">
+  <img src="./screenshots/screen1.jpeg" width="20%" />
+  <img src="./screenshots/screen2.jpeg" width="20%" />
+  <img src="./screenshots/screen3.jpeg" width="20%" />
+</p>
 
 
 ### Let's work together! 
