@@ -43,13 +43,10 @@ validation error when there is an empty field or a format error.
 successfully” message.
 
 #### Demo video
-https://github.com/massuiabigdog/Coodesh_react-native_challenge/assets/16282589/cfd50a73-1b53-4d03-afba-d6c716362efc
+https://github.com/massuiabigdog/n8-frontend-challenge/assets/16282589/70062409-e9dc-4ee8-b694-1f4f45efa306
 
 #### Screens
-![Simulator Screenshot - iPhone 15 Pro Max - 2024-03-01 at 11 48 58 Large](https://github.com/massuiabigdog/shopping-cart-challenge-react-native/assets/16282589/1ce382b1-8cab-4aec-a70f-eea2598fc2ff)
-![Simulator Screenshot - iPhone 15 Pro Max - 2024-03-01 at 11 48 46 Large](https://github.com/massuiabigdog/shopping-cart-challenge-react-native/assets/16282589/725825e6-5e68-4bd0-a9c6-f28382e89d33)
-![Simulator Screenshot - iPhone 15 Pro Max - 2024-03-01 at 11 48 35 Large](https://github.com/massuiabigdog/shopping-cart-challenge-react-native/assets/16282589/48f57efd-5cc3-4b9e-9435-351b0ca1dad0)
-![Simulator Screenshot - iPhone 15 Pro Max - 2024-03-01 at 01 49 46 Large](https://github.com/massuiabigdog/shopping-cart-challenge-react-native/assets/16282589/9c0438bf-1276-44a3-a595-cfb8d91b4131)
+
 
 ### Let's work together! 
 
