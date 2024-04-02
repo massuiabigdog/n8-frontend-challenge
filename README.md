@@ -50,9 +50,9 @@ https://github.com/massuiabigdog/n8-frontend-challenge/assets/16282589/70062409-
 
 #### Screens
 <p float="left">
-  <img src="./screenshots/screen1.jpeg" width="20%" />
-  <img src="./screenshots/screen2.jpeg" width="20%" />
-  <img src="./screenshots/screen3.jpeg" width="20%" />
+  <img src="./screenshots/screen1.jpeg" width="50%" />
+  <img src="./screenshots/screen2.jpeg" width="50%" />
+  <img src="./screenshots/screen3.jpeg" width="50%" />
 </p>
 
 
