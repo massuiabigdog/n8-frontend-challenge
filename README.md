@@ -42,8 +42,11 @@ validation error when there is an empty field or a format error.
 - When clicking the button if all validations are ok it will display a green “Message sent
 successfully” message.
 
-#### Bonus 
+#### Bonus Task: 
 Add a “Save Property” button that will display a modal with all other saved properties.
+
+
+## Demo
 
 #### Demo video
 https://github.com/massuiabigdog/n8-frontend-challenge/assets/16282589/70062409-e9dc-4ee8-b694-1f4f45efa306
@@ -56,7 +59,7 @@ https://github.com/massuiabigdog/n8-frontend-challenge/assets/16282589/70062409-
 </p>
 
 
-### Let's work together! 
+## Let's work together! 
 
 Hi! My name is Thiago Massuia, I'm a fullstack developer with a focus on React and NodeJS.
 I'm passionate about JavaScript and I have a lot of experience working with it.
