@@ -26,8 +26,7 @@ const Home = () => {
     }
   );
   const navigate = useNavigate();
-
-  console.log(favItems, 'favItems')
+ 
 
   const priceOptions = [
     '$100,000 - $200,000',

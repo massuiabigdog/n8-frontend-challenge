@@ -10,7 +10,10 @@ export type FavContextType = {
 export const FavContext = createContext<FavContextType | undefined>(undefined);
 
 export const FavProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [favItems, setFavItems] = useState<PropertyItem[]>([]);
+  const [favItems, setFavItems] = useState<PropertyItem[]>(() => {
+    const storedFavItems = localStorage.getItem('favItems');
+    return storedFavItems ? JSON.parse(storedFavItems) : [];
+  });
 
   const toggleFavItem = (item: PropertyItem) => {
     const isAlreadyFav = favItems.some((favItem) => favItem.Id === item.Id);

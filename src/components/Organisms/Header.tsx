@@ -5,10 +5,7 @@ interface HeaderProps {
     navigate: any;
 }
 const Header: React.FC<HeaderProps> = ({ navigate }) => {
-
     const location = window.location.pathname;
-    console.log(location, 'location');
-
     const navItems = [
         {
             name: 'Home',
