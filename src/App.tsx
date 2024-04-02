@@ -1,11 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import MainNavigator from './MainNavigator';
+import { FavProvider } from './context/FavContext';
 
 function App() {
   return (
-    <MainNavigator />
+    <FavProvider>
+      <MainNavigator />
+    </FavProvider>
   );
 }
 

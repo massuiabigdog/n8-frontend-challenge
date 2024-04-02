@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getData } from '../services/api';
 import { Section, PropertyCard } from '../components/Molecules';
 import { Spinner } from '../components/Atoms';
 import { PropertyItem } from '../types';
 import { Header } from '../components/Organisms';
+import { FavContext } from '../context/FavContext';
 
 interface Property {
   Bedrooms: number;
@@ -17,6 +18,7 @@ const Home = () => {
   const [filteredProperties, setFilteredProperties] = useState([] as any[] | null);
   const [filters, setFilters] = useState({
   } as any);
+  const { favItems } = useContext(FavContext) || {};
   const [priceFilter, setPriceFilter] = useState(
     {
       min: 0,
@@ -25,6 +27,16 @@ const Home = () => {
   );
   const navigate = useNavigate();
 
+  console.log(favItems, 'favItems')
+
+  const priceOptions = [
+    '$100,000 - $200,000',
+    '$200,000 - $300,000',
+    '$300,000 - $400,000',
+    '$400,000 - $500,000',
+    '$500,000 +',
+  ]
+
   const handleDetailView = async (property?: PropertyItem) => {
     navigate('/detail', { state: { property } });
   }
@@ -32,9 +44,8 @@ const Home = () => {
   const getProperties = async () => {
     try {
       const data = await getData();
-      setProperties(data);
-      setFilteredProperties(data);
-
+      setProperties(data as PropertyItem[]);
+      setFilteredProperties(data as PropertyItem[]);
     } catch (error) {
       console.log(error)
     }
@@ -76,10 +87,13 @@ const Home = () => {
   }, [filters, priceFilter])
 
   const handleFilterChange = (filter: string, value: any) => {
-    console.log(value, 'value')
     if (filter === 'price') {
       if (!value) {
         setPriceFilter({ min: 0, max: 1000000 });
+        return;
+      }
+      if (value === priceOptions[priceOptions.length - 1]) {
+        setPriceFilter({ min: 500000, max: 1000000 });
         return;
       }
       const priceRange = value.split(' - ');
@@ -89,27 +103,18 @@ const Home = () => {
     setFilters({ ...filters, [filter]: value });
   }
 
-
-
   const getAvailableOptions = (item: keyof Property) => Array.from(new Set(properties?.map((property) => property[item]))).sort((a, b) => a - b);
   const availableOptions = {
     Bedrooms: getAvailableOptions('Bedrooms'),
     Bathrooms: getAvailableOptions('Bathrooms'),
     Parking: getAvailableOptions('Parking'),
   };
-  const priceOptions = [
-    '$100,000 - $200,000',
-    '$200,000 - $300,000',
-    '$300,000 - $400,000',
-    '$400,000 - $500,000',
-    '$500,000 - $999,000',
-  ]
 
   return (
     <>
       <Header navigate={navigate} />
       <div className="px-5 py-4 bg-gray-100">
-        <div className="container mx-auto md:flex justify-between  mb-2 mt-2">
+        <div className="container mx-auto md:flex justify-around  mb-2 mt-2">
           {Object.keys(availableOptions).map((option) => <div className='flex md:block' key={option}>
             <label htmlFor={option}>{option}:</label>
             <select
@@ -142,17 +147,18 @@ const Home = () => {
           </div>
         </div>
       </div>
-
       <Section>
         {
           properties.length ? <div className="flex flex-wrap -m-4">
             {filteredProperties?.map((property: any) => (
-              <PropertyCard key={property.id} handleDetailView={(e: PropertyItem) => handleDetailView(e)} property={{ ...property }} />
+              <PropertyCard
+                isFav={!favItems?.find((item: PropertyItem) => item.Id === property.Id)}
+                key={property.id} handleDetailView={(e: PropertyItem) => handleDetailView(e)} property={{ ...property }} />
             ))}
           </div> : <Spinner />
         }
         {
-          properties.length && !filteredProperties?.length && <div className="text-center">No properties found</div>
+          (!filteredProperties?.length && !!properties.length) && <div className="text-center">No properties found</div>
         }
 
       </Section>

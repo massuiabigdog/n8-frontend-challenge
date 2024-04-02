@@ -1,13 +1,15 @@
-import React from 'react';
+import { useContext } from 'react';
 
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Section } from '../components/Molecules';
 import { formatDate, formatMoney } from '../utils';
 import { ContactForm, Features, Header } from '../components/Organisms';
-import { CustomButton } from '../components/Atoms';
+import { CustomButton, FavButton } from '../components/Atoms';
+import { FavContext } from '../context/FavContext';
 
-const DetailScreen = () => {
+const DetailScreen =  () => {
   const navigate = useNavigate();
+  const { favItems, toggleFavItem } =  useContext(FavContext) || {};
   const { property } = useLocation().state as any;
   const featureItems = [
     {
@@ -53,6 +55,7 @@ const DetailScreen = () => {
                 </div>
                 <Features items={featureItems} />
                 <p className="leading-relaxed text-gray-700 mb-3">{property.Description}</p>
+                <FavButton active={!favItems?.find((item: any) => item.Id === property.Id)}  onClick={() => toggleFavItem && toggleFavItem(property)} />
               </div>
             </div>
           </div>
